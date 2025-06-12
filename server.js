@@ -1,11 +1,20 @@
 // server.js
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Swagger API docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Dummy Data
 let employees = [
@@ -26,7 +35,7 @@ let products = [
 
 // Homepage
 app.get('/', (req, res) => {
-  res.send('Welcome to your API practice site 🎉');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ===================== EMPLOYEE ROUTES =====================
