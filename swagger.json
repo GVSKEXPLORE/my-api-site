@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Practice Site",
+    "description": "This is a mock API for practicing GET, POST, PUT, DELETE operations on employees and products.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/employees": {
+      "get": {
+        "summary": "Get all employees",
+        "responses": {
+          "200": {
+            "description": "A list of employees"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new employee",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "department": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "role",
+                  "department"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Employee added successfully"
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get all products",
+        "responses": {
+          "200": {
+            "description": "A list of products"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "category": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "price",
+                  "category"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product added successfully"
+          }
+        }
+      }
+    }
+  }
+}
