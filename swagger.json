@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API Practice Site",
-    "description": "This is a mock API for practicing GET, POST, PUT, DELETE operations on employees and products.",
+    "title": "Mock API Practice Server",
+    "description": "A mock API for testing CRUD operations on employees and products.",
     "version": "1.0.0"
   },
   "paths": {
@@ -11,7 +11,7 @@
         "summary": "Get all employees",
         "responses": {
           "200": {
-            "description": "A list of employees"
+            "description": "List of employees"
           }
         }
       },
@@ -45,7 +45,93 @@
         },
         "responses": {
           "201": {
-            "description": "Employee added successfully"
+            "description": "Employee created"
+          }
+        }
+      }
+    },
+    "/employees/{id}": {
+      "get": {
+        "summary": "Get employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee found"
+          },
+          "404": {
+            "description": "Employee not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "department": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee updated"
+          },
+          "404": {
+            "description": "Employee not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete employee by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Employee deleted"
+          },
+          "404": {
+            "description": "Employee not found"
           }
         }
       }
@@ -55,7 +141,7 @@
         "summary": "Get all products",
         "responses": {
           "200": {
-            "description": "A list of products"
+            "description": "List of products"
           }
         }
       },
@@ -89,7 +175,170 @@
         },
         "responses": {
           "201": {
-            "description": "Product added successfully"
+            "description": "Product created"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Get product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product found"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "category": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered"
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Check API status",
+        "responses": {
+          "200": {
+            "description": "API is running"
           }
         }
       }
