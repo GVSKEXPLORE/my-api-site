@@ -1,0 +1,66 @@
+module.exports = {
+  openapi: "3.0.0",
+  info: {
+    title: "API Practice Server",
+    version: "1.0.0",
+    description: "Asset and employee management API with Swagger"
+  },
+  servers: [{ url: "http://localhost:3000" }],
+  paths: {
+    "/employees": {
+      get: { summary: "List all employees", responses: { "200": { description: "OK" } } },
+      post: { summary: "Add a new employee", responses: { "201": { description: "Created" } } }
+    },
+    "/employees/{id}": {
+      get: { summary: "Get employee by ID", responses: { "200": { description: "OK" } } },
+      put: { summary: "Update employee by ID", responses: { "200": { description: "OK" } } },
+      delete: { summary: "Delete employee", responses: { "204": { description: "No Content" } } }
+    },
+    "/employees/{id}/assets": {
+      get: { summary: "Get employee's assets", responses: { "200": { description: "OK" } } }
+    },
+    "/employees/{id}/repairs": {
+      get: { summary: "Get employee's repairs", responses: { "200": { description: "OK" } } }
+    },
+    "/products": {
+      get: { summary: "List all products", responses: { "200": { description: "OK" } } },
+      post: { summary: "Add a new product", responses: { "201": { description: "Created" } } }
+    },
+    "/products/{id}": {
+      get: { summary: "Get product by ID", responses: { "200": { description: "OK" } } },
+      put: { summary: "Update product", responses: { "200": { description: "OK" } } },
+      delete: { summary: "Delete product", responses: { "204": { description: "No Content" } } }
+    },
+    "/assets": {
+      get: { summary: "List all assets", responses: { "200": { description: "OK" } } },
+      post: { summary: "Add a new asset", responses: { "201": { description: "Created" } } }
+    },
+    "/assets/{id}": {
+      put: { summary: "Update asset", responses: { "200": { description: "OK" } } }
+    },
+    "/assets/{id}/assign": {
+      post: { summary: "Assign asset", responses: { "200": { description: "OK" } } }
+    },
+    "/assets/{id}/unassign": {
+      post: { summary: "Unassign asset", responses: { "200": { description: "OK" } } }
+    },
+    "/repairs": {
+      get: { summary: "List repairs", responses: { "200": { description: "OK" } } },
+      post: { summary: "Create repair", responses: { "201": { description: "Created" } } }
+    },
+    "/repairs/{id}": {
+      get: { summary: "Get repair", responses: { "200": { description: "OK" } } },
+      put: { summary: "Update repair", responses: { "200": { description: "OK" } } },
+      delete: { summary: "Delete repair", responses: { "204": { description: "No Content" } } }
+    },
+    "/status": {
+      get: { summary: "Check API status", responses: { "200": { description: "OK" } } }
+    },
+    "/login": {
+      post: { summary: "User login", responses: { "200": { description: "OK" } } }
+    },
+    "/register": {
+      post: { summary: "User register", responses: { "201": { description: "Created" } } }
+    }
+  }
+};
