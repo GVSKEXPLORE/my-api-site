@@ -1,339 +1,160 @@
-// swagger.js
-module.exports = {
-  openapi: "3.0.0",
-  info: {
-    title: "Employee Asset Management API",
-    version: "1.0.0",
-    description: "API to manage employees, assets, and repair requests. Requires authentication."
-  },
-  servers: [
-    {
-      url: "https://my-api-site.onrender.com",
-      description: "Production Server"
-    }
-  ],
-  tags: [
-    { name: "Employees" },
-    { name: "Assets" },
-    { name: "Repairs" },
-    { name: "Auth" }
-  ],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT"
-      }
-    },
-    schemas: {
-      Employee: {
-        type: "object",
-        properties: {
-          name: { type: "string", example: "Alice Johnson" },
-          role: { type: "string", example: "Developer" },
-          department: { type: "string", example: "Engineering" }
-        },
-        required: ["name", "role", "department"]
-      },
-      Asset: {
-        type: "object",
-        properties: {
-          type: { type: "string", example: "Laptop" },
-          brand: { type: "string", example: "Dell" },
-          serialNumber: { type: "string", example: "SN12345" }
-        },
-        required: ["type", "brand", "serialNumber"]
-      },
-      Repair: {
-        type: "object",
-        properties: {
-          employeeId: { type: "integer", example: 1 },
-          assetId: { type: "integer", example: 2 },
-          description: { type: "string", example: "Screen flickering" }
-        },
-        required: ["employeeId", "assetId", "description"]
-      },
-      LoginRequest: {
-        type: "object",
-        properties: {
-          username: { type: "string", example: "admin" },
-          password: { type: "string", example: "password" }
-        },
-        required: ["username", "password"]
-      },
-      LoginResponse: {
-        type: "object",
-        properties: {
-          token: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
-          expiresIn: { type: "integer", example: 3600 }
-        }
-      }
-    }
-  },
-  security: [
-    { bearerAuth: [] }
-  ],
-  paths: {
-    "/login": {
-      post: {
-        tags: ["Auth"],
-        summary: "Authenticate and get JWT token",
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/LoginRequest" }
-            }
-          }
-        },
-        responses: {
-          200: {
-            description: "Successful login",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/LoginResponse" }
-              }
-            }
-          },
-          401: { description: "Unauthorized" }
-        }
-      }
-    },
-    "/employees": {
-      get: {
-        tags: ["Employees"],
-        summary: "Get all employees",
-        security: [{ bearerAuth: [] }],
-        responses: {
-          200: { description: "OK" },
-          500: { description: "Internal Server Error" }
-        }
-      },
-      post: {
-        tags: ["Employees"],
-        summary: "Create a new employee",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Employee" }
-            }
-          }
-        },
-        responses: {
-          201: { description: "Created" },
-          400: { description: "Bad Request" }
-        }
-      }
-    },
-    "/employees/{id}": {
-      get: {
-        tags: ["Employees"],
-        summary: "Get employee by ID",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: {
-          200: { description: "OK" },
-          404: { description: "Not Found" }
-        }
-      },
-      put: {
-        tags: ["Employees"],
-        summary: "Update employee",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Employee" }
-            }
-          }
-        },
-        responses: { 200: { description: "Updated" }, 404: { description: "Not Found" } }
-      },
-      delete: {
-        tags: ["Employees"],
-        summary: "Delete employee",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 204: { description: "Deleted" }, 404: { description: "Not Found" } }
-      }
-    },
-    "/employees/{id}/assets": {
-      get: {
-        tags: ["Employees"],
-        summary: "Get assets assigned to an employee",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 200: { description: "OK" } }
-      }
-    },
-    "/employees/{id}/repairs": {
-      get: {
-        tags: ["Employees"],
-        summary: "Get repairs requested by an employee",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 200: { description: "OK" } }
-      }
-    },
-    "/assets": {
-      get: {
-        tags: ["Assets"],
-        summary: "Get all assets",
-        security: [{ bearerAuth: [] }],
-        responses: { 200: { description: "OK" } }
-      },
-      post: {
-        tags: ["Assets"],
-        summary: "Create asset",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Asset" }
-            }
-          }
-        },
-        responses: { 201: { description: "Created" } }
-      }
-    },
-    "/assets/{id}": {
-      put: {
-        tags: ["Assets"],
-        summary: "Update asset",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Asset" }
-            }
-          }
-        },
-        responses: { 200: { description: "Updated" }, 404: { description: "Not Found" } }
-      },
-      delete: {
-        tags: ["Assets"],
-        summary: "Delete asset",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 204: { description: "Deleted" }, 404: { description: "Not Found" } }
-      }
-    },
-    "/assets/{id}/assign": {
-      post: {
-        tags: ["Assets"],
-        summary: "Assign asset to employee",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  employeeId: { type: "integer", example: 1 }
-                },
-                required: ["employeeId"]
-              }
-            }
-          }
-        },
-        responses: { 200: { description: "Assigned" }, 404: { description: "Not Found" } }
-      }
-    },
-    "/assets/{id}/unassign": {
-      post: {
-        tags: ["Assets"],
-        summary: "Unassign asset",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 200: { description: "Unassigned" }, 404: { description: "Not Found" } }
-      }
-    },
-    "/repairs": {
-      get: {
-        tags: ["Repairs"],
-        summary: "Get all repair requests",
-        security: [{ bearerAuth: [] }],
-        responses: { 200: { description: "OK" } }
-      },
-      post: {
-        tags: ["Repairs"],
-        summary: "Create a repair request",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Repair" }
-            }
-          }
-        },
-        responses: { 201: { description: "Created" } }
-      }
-    },
-    "/repairs/{id}": {
-      get: {
-        tags: ["Repairs"],
-        summary: "Get repair by ID",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 200: { description: "OK" }, 404: { description: "Not Found" } }
-      },
-      put: {
-        tags: ["Repairs"],
-        summary: "Update repair",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/Repair" }
-            }
-          }
-        },
-        responses: { 200: { description: "Updated" }, 404: { description: "Not Found" } }
-      },
-      delete: {
-        tags: ["Repairs"],
-        summary: "Delete repair",
-        security: [{ bearerAuth: [] }],
-        parameters: [
-          { name: "id", in: "path", required: true, schema: { type: "integer" } }
-        ],
-        responses: { 204: { description: "Deleted" }, 404: { description: "Not Found" } }
-      }
-    }
-  }
+// server.js
+const express = require('express');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
+const TOKEN_EXPIRE_TIME = '1h';
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Authentication middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
 };
+
+// Dummy Data
+let employees = [
+  { id: 1, name: "Alice Johnson", role: "Developer", department: "Engineering" },
+  { id: 2, name: "Bob Smith", role: "Designer", department: "UX" },
+];
+
+let assets = [
+  { id: 1, type: "Laptop", brand: "Dell", serialNumber: "SN123", status: "Assigned", employeeId: 1 },
+  { id: 2, type: "Mouse", brand: "Logitech", serialNumber: "SN456", status: "Available", employeeId: null },
+];
+
+let repairs = [
+  { id: 1, employeeId: 1, assetId: 1, description: "Screen flickering", status: "Open", reportedAt: new Date() }
+];
+
+// Login Route
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'password') {
+    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: TOKEN_EXPIRE_TIME });
+    res.json({ token, expiresIn: 3600 });
+  } else {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+});
+
+// Employee Routes
+app.get('/employees', authenticateToken, (req, res) => res.json(employees));
+app.post('/employees', authenticateToken, (req, res) => {
+  const emp = { id: employees.length + 1, ...req.body };
+  employees.push(emp);
+  res.status(201).json(emp);
+});
+app.get('/employees/:id', authenticateToken, (req, res) => {
+  const emp = employees.find(e => e.id == req.params.id);
+  emp ? res.json(emp) : res.status(404).send('Employee not found');
+});
+app.put('/employees/:id', authenticateToken, (req, res) => {
+  const index = employees.findIndex(e => e.id == req.params.id);
+  if (index !== -1) {
+    employees[index] = { id: Number(req.params.id), ...req.body };
+    res.json(employees[index]);
+  } else {
+    res.status(404).send('Employee not found');
+  }
+});
+app.delete('/employees/:id', authenticateToken, (req, res) => {
+  employees = employees.filter(e => e.id != req.params.id);
+  res.status(204).send();
+});
+app.get('/employees/:id/assets', authenticateToken, (req, res) => {
+  const assigned = assets.filter(a => a.employeeId == req.params.id);
+  res.json(assigned);
+});
+app.get('/employees/:id/repairs', authenticateToken, (req, res) => {
+  const employeeRepairs = repairs.filter(r => r.employeeId == req.params.id);
+  res.json(employeeRepairs);
+});
+
+// Asset Routes
+app.get('/assets', authenticateToken, (req, res) => res.json(assets));
+app.post('/assets', authenticateToken, (req, res) => {
+  const asset = { id: assets.length + 1, status: "Available", employeeId: null, ...req.body };
+  assets.push(asset);
+  res.status(201).json(asset);
+});
+app.put('/assets/:id', authenticateToken, (req, res) => {
+  const index = assets.findIndex(a => a.id == req.params.id);
+  if (index !== -1) {
+    assets[index] = { ...assets[index], ...req.body };
+    res.json(assets[index]);
+  } else {
+    res.status(404).send('Asset not found');
+  }
+});
+app.delete('/assets/:id', authenticateToken, (req, res) => {
+  assets = assets.filter(p => p.id != req.params.id);
+  res.status(204).send();
+});
+app.post('/assets/:id/assign', authenticateToken, (req, res) => {
+  const index = assets.findIndex(a => a.id == req.params.id);
+  if (index !== -1) {
+    assets[index].employeeId = req.body.employeeId;
+    assets[index].status = "Assigned";
+    res.json(assets[index]);
+  } else {
+    res.status(404).send('Asset not found');
+  }
+});
+app.post('/assets/:id/unassign', authenticateToken, (req, res) => {
+  const index = assets.findIndex(a => a.id == req.params.id);
+  if (index !== -1) {
+    assets[index].employeeId = null;
+    assets[index].status = "Available";
+    res.json(assets[index]);
+  } else {
+    res.status(404).send('Asset not found');
+  }
+});
+
+// Repair Routes
+app.get('/repairs', authenticateToken, (req, res) => res.json(repairs));
+app.post('/repairs', authenticateToken, (req, res) => {
+  const repair = { id: repairs.length + 1, reportedAt: new Date(), ...req.body };
+  repairs.push(repair);
+  res.status(201).json(repair);
+});
+app.get('/repairs/:id', authenticateToken, (req, res) => {
+  const repair = repairs.find(r => r.id == req.params.id);
+  repair ? res.json(repair) : res.status(404).send('Repair not found');
+});
+app.put('/repairs/:id', authenticateToken, (req, res) => {
+  const index = repairs.findIndex(r => r.id == req.params.id);
+  if (index !== -1) {
+    repairs[index] = { ...repairs[index], ...req.body };
+    res.json(repairs[index]);
+  } else {
+    res.status(404).send('Repair not found');
+  }
+});
+app.delete('/repairs/:id', authenticateToken, (req, res) => {
+  repairs = repairs.filter(r => r.id != req.params.id);
+  res.status(204).send();
+});
+
+app.get('/', (req, res) => res.send('Welcome to Employee Asset Management API'));
+
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
+});
