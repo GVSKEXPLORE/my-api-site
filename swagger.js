@@ -18,6 +18,13 @@ module.exports = {
     { name: "Repairs" }
   ],
   components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT"
+      }
+    },
     schemas: {
       Employee: {
         type: "object",
@@ -48,6 +55,11 @@ module.exports = {
       }
     }
   },
+  security: [
+    {
+      bearerAuth: []
+    }
+  ],
   paths: {
     "/employees": {
       get: {
