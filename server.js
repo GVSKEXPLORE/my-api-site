@@ -4,9 +4,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerDocument = require('./swagger');
 require('dotenv').config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
