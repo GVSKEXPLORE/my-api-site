@@ -1,11 +1,11 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger');
+const swaggerDocument = require('./swagger.js');
 require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'mysecretkey';
@@ -14,15 +14,11 @@ const TOKEN_EXPIRE_TIME = '1h';
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Swagger route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Authentication middleware
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-
   if (!token) return res.sendStatus(401);
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -32,22 +28,20 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Dummy Data
 let employees = [
   { id: 1, name: "Alice Johnson", role: "Developer", department: "Engineering" },
-  { id: 2, name: "Bob Smith", role: "Designer", department: "UX" },
+  { id: 2, name: "Bob Smith", role: "Designer", department: "UX" }
 ];
 
 let assets = [
   { id: 1, type: "Laptop", brand: "Dell", serialNumber: "SN123", status: "Assigned", employeeId: 1 },
-  { id: 2, type: "Mouse", brand: "Logitech", serialNumber: "SN456", status: "Available", employeeId: null },
+  { id: 2, type: "Mouse", brand: "Logitech", serialNumber: "SN456", status: "Available", employeeId: null }
 ];
 
 let repairs = [
   { id: 1, employeeId: 1, assetId: 1, description: "Screen flickering", status: "Open", reportedAt: new Date() }
 ];
 
-// Login Route
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'password') {
@@ -58,7 +52,6 @@ app.post('/login', (req, res) => {
   }
 });
 
-// Employee Routes
 app.get('/employees', authenticateToken, (req, res) => res.json(employees));
 app.post('/employees', authenticateToken, (req, res) => {
   const emp = { id: employees.length + 1, ...req.body };
@@ -91,7 +84,6 @@ app.get('/employees/:id/repairs', authenticateToken, (req, res) => {
   res.json(employeeRepairs);
 });
 
-// Asset Routes
 app.get('/assets', authenticateToken, (req, res) => res.json(assets));
 app.post('/assets', authenticateToken, (req, res) => {
   const asset = { id: assets.length + 1, status: "Available", employeeId: null, ...req.body };
@@ -132,7 +124,6 @@ app.post('/assets/:id/unassign', authenticateToken, (req, res) => {
   }
 });
 
-// Repair Routes
 app.get('/repairs', authenticateToken, (req, res) => res.json(repairs));
 app.post('/repairs', authenticateToken, (req, res) => {
   const repair = { id: repairs.length + 1, reportedAt: new Date(), ...req.body };
@@ -157,7 +148,6 @@ app.delete('/repairs/:id', authenticateToken, (req, res) => {
   res.status(204).send();
 });
 
-// Root
 app.get('/', (req, res) => res.send('Welcome to Employee Asset Management API'));
 
 app.listen(PORT, () => {
